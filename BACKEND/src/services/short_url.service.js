@@ -3,6 +3,7 @@ import { saveShortUrl } from "../dao/short_url_db.js";
 
 export const createShortUrlServiceWithoutUser = async (url) => {
   const shortUrl = generateNanoId(7);
+  if(!shortUrl) throw new Error("shorturl is not generated")
   await saveShortUrl(shortUrl, url);
   return shortUrl;
 };
