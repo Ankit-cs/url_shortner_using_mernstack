@@ -4,11 +4,13 @@ import cabinate from "./src/config/db.config.js";
 import shortUrlRoutes from "./src/routes/shortUrl.route.js";
 import { redirectFromShort } from "./src/controller/shortUrl.controller.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
+import cors from "cors";
+
 
 dotenv.config();
 const app = express();
 const PORT = 3000;
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(errorHandler)
