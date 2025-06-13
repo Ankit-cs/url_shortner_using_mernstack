@@ -2,7 +2,7 @@ import { createShortUrlServiceWithoutUser } from "../services/short_url.service.
 import { getShortUrl } from "../dao/short_url_db.js";
 
 export const createShortUrl = async (req, res) => {
-  const { url } = req.body;
+  const {url } = req.body;
   const shortUrl = await createShortUrlServiceWithoutUser(url);
   res.send(`${process.env.APP_URL}/${shortUrl}`);
 };
