@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 const shortUrlSchema = new mongoose.Schema({
   full_url: {
     type: String,
-    required: true,
+    required: false,
   },
   short_url: {
     type: String,
-    required: true,
+    required: false,
     index: true, // index creates a b tree of data
     unique: true,
   },
