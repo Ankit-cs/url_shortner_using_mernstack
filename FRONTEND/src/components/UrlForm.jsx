@@ -31,7 +31,7 @@ const UrlForm = () => {
     // Reset the copied state after 2 seconds
     setTimeout(() => {
       setCopied(false);
-    }, 3000);
+    }, 2000);
   }
 
   return (
