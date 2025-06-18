@@ -15,7 +15,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: 'https://url-shortner-frontend2.onrender.com/',
+    origin: 'https://url-shortner-frontend2.onrender.com',
     credentials: true
 }));
 app.use(express.json());
