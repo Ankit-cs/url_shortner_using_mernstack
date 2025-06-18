@@ -1,40 +1,37 @@
 import express from "express";
-import dotenv from "dotenv"
-import connectDB from "./src/config/db.config.js"
-import short_url from "./src/routes/shortUrl.route.js"
-import user_routes from "./src/routes/user.route.js"
-import auth_routes from "./src/routes/auth.route.js"
+import dotenv from "dotenv";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import connectDB from "./src/config/db.config.js";
+import shortUrlRoutes from "./src/routes/shortUrl.route.js";
+import userRoutes from "./src/routes/user.route.js";
+import authRoutes from "./src/routes/auth.route.js";
 import { redirectFromShortUrl } from "./src/controller/shortUrl.controller.js";
 import { errorHandler } from "./src/utils/errorHandler.js";
-import cors from "cors"
 import { attachUser } from "./src/utils/attachUser.js";
-import cookieParser from "cookie-parser"
 
-dotenv.config("./.env")
+dotenv.config();
 
 const app = express();
 
 app.use(cors({
     origin: 'http://localhost:5173',
-    credentials: true 
+    credentials: true
 }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(attachUser);
 
-app.use(express.json())
-app.use(express.urlencoded({extended:true}))
-app.use(cookieParser())
+app.use("/api/user", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/create", shortUrlRoutes);
+app.get("/:id", redirectFromShortUrl);
 
-app.use(attachUser)
+app.use(errorHandler);
 
-app.use("/api/user",user_routes)
-app.use("/api/auth",auth_routes)
-app.use("/api/create",short_url)
-app.get("/:id",redirectFromShortUrl)
-
-app.use(errorHandler)
-
-app.listen(3000,()=>{
-    connectDB()
-    console.log("Server is running on http://localhost:3000");
-})
-
-// GET - Redirection 
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, async () => {
+    await connectDB();
+    console.log(`Server is running on ${process.env.APP_URL || `http://localhost:${PORT}`}`);
+});
