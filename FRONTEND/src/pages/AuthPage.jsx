@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import LoginForm from '../components/LoginForm'
 import RegisterForm from '../components/RegisterForm'
 import { useSearch } from '@tanstack/react-router'
 
 const AuthPage = () => {
-  const search = useSearch({ from: '/auth' });
-  const [login, setLogin] = useState(true);
+  const { mode } = useSearch({ strict: false }) // read ?mode=login or ?mode=register
+  const [login, setLogin] = useState(mode !== 'register')
 
   useEffect(() => {
-    if (search.form === 'signup') setLogin(false);
-    else if (search.form === 'login') setLogin(true);
-  }, [search.form]);
+    if (mode === 'register') setLogin(false)
+    else setLogin(true)
+  }, [mode])
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
