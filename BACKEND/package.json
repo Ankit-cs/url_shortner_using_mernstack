@@ -1,16 +1,17 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "URL Shortener Backend using Node.js, Express, and MongoDB",
+  "main": "app.js",
+  "type": "module",
   "scripts": {
-    "dev":"nodemon app.js",
+    "dev": "nodemon app.js",
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["url-shortener", "express", "nodejs", "mongodb"],
+  "author": "Ankit Kumar",
   "license": "ISC",
-  "type": "module",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
@@ -19,7 +20,9 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.0",
-    "nanoid": "^5.1.5",
+    "nanoid": "^5.1.5"
+  },
+  "devDependencies": {
     "nodemon": "^3.1.10"
   }
 }
