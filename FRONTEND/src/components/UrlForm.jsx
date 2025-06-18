@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useNavigate } from '@tanstack/react-router';
 
 const UrlForm = () => {
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
   const [touched, setTouched] = useState(false);
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const navigate = useNavigate();
+  const [shortenedUrl, setShortenedUrl] = useState('');
+  // const { isAuthenticated } = useSelector((state) => state.auth);
 
   const validateUrl = (value) => {
     if (!value) return 'We\'ll need a valid URL, like "super-long-link.com/shorten-it"';
@@ -21,6 +20,7 @@ const UrlForm = () => {
 
   const handleChange = (e) => {
     setUrl(e.target.value);
+    setShortenedUrl('');
     if (touched) setError(validateUrl(e.target.value));
   };
 
@@ -29,16 +29,28 @@ const UrlForm = () => {
     setError(validateUrl(url));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const err = validateUrl(url);
     setTouched(true);
     setError(err);
     if (!err) {
-      if (!isAuthenticated) {
-        navigate({ to: '/auth' });
-      } else {
-        console.log('Shortening URL:', url);
+      try {
+        const res = await fetch('https://url-shortner-backend-ew7x.onrender.com/api/shorten', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ originalUrl: url }),
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          setShortenedUrl(data.shortUrl); // assuming backend returns { shortUrl: '...' }
+          setError('');
+        } else {
+          setError(data.message || 'Something went wrong. Please try again.');
+        }
+      } catch (err) {
+        setError('Failed to shorten URL. Please try again.');
       }
     }
   };
@@ -64,6 +76,20 @@ const UrlForm = () => {
       >
         Get your link for free
       </button>
+
+      {shortenedUrl && (
+        <div className="mt-4 text-center">
+          <p className="text-green-600 text-sm">Shortened URL:</p>
+          <a
+            href={shortenedUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-500 underline break-all"
+          >
+            {shortenedUrl}
+          </a>
+        </div>
+      )}
     </form>
   );
 };
