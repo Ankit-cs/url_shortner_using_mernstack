@@ -5,8 +5,8 @@ import { login } from '../store/slice/authSlice.js';
 import { useNavigate } from '@tanstack/react-router';
 
 const LoginForm = ({ state }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const navigate = useNavigate()
@@ -33,7 +33,19 @@ const LoginForm = ({ state }) => {
     return (
         <div className="w-full max-w-md mx-auto">
             <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
+                <div className="flex items-center justify-between mb-6">
+                    <button
+                        onClick={() => state(false)}
+                        className="text-gray-600 hover:text-gray-800 flex items-center"
+                    >
+                        <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                        </svg>
+                        Back
+                    </button>
+                    <h2 className="text-2xl font-bold">Login</h2>
+                    <div className="w-12"></div> {/* Spacer for centering */}
+                </div>
 
                 {error && (
                     <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
