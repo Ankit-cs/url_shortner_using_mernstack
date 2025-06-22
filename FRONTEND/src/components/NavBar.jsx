@@ -1,7 +1,26 @@
 import React from 'react';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../store/slice/authSlice';
+import { logoutUser } from '../api/user.api';
 
 const Navbar = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      dispatch(logout());
+      navigate({ to: '/' });
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if API call fails
+      dispatch(logout());
+      navigate({ to: '/' });
+    }
+  };
   return (
     <nav className="bg-white border border-b-black">
       <div className=" mx-auto px-4 sm:px-6 lg:px-8">
@@ -15,11 +34,11 @@ const Navbar = () => {
           
           {/* Right side - Auth buttons */}
           <div className="flex items-center">
-            {/* {(true) ? (
+            {isAuthenticated ? (
               <div className="flex items-center space-x-4">
-                <span className="text-gray-700">Welcome, {userName || 'User'}</span>
+                <span className="text-gray-700">Welcome, {user?.name || 'User'}</span>
                 <button
-                  onClick={onLogout}
+                  onClick={handleLogout}
                   className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium"
                 >
                   Logout
@@ -32,7 +51,7 @@ const Navbar = () => {
               >
                 Login
               </Link>
-            )} */}
+            )}
           </div>
         </div>
       </div>

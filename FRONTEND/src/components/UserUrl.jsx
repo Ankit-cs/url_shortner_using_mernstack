@@ -1,19 +1,29 @@
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { getAllUserUrls } from '../api/user.api'
+import { useSelector } from 'react-redux'
 
 const UserUrl = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
   const { data: urls, isLoading, isError, error } = useQuery({
     queryKey: ['userUrls'],
     queryFn: getAllUserUrls,
     refetchInterval: 30000, // Refetch every 30 seconds to update click counts
     staleTime: 0, // Consider data stale immediately so it refetches when invalidated
+    enabled: isAuthenticated && !!user, // Only run query if user is authenticated
   })
   const [copiedId, setCopiedId] = useState(null)
+
+  // Don't render if user is not authenticated
+  if (!isAuthenticated || !user) {
+    return null;
+  }
+
   const handleCopy = (url, id) => {
     navigator.clipboard.writeText(url)
     setCopiedId(id)
-    
+
     // Reset the copied state after 2 seconds
     setTimeout(() => {
       setCopiedId(null)
@@ -31,7 +41,12 @@ const UserUrl = () => {
   if (isError) {
     return (
       <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded my-4">
-        Error loading your URLs: {error.message}
+        <p className="font-semibold">Error loading your URLs</p>
+        <p className="text-sm mt-1">
+          {error.message === 'Unauthorized'
+            ? 'Please try logging out and logging back in.'
+            : error.message}
+        </p>
       </div>
     )
   }
